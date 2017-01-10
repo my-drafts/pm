@@ -178,4 +178,3 @@ class Field extends Gameable{
 	}
 
 }
-

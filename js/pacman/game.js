@@ -107,7 +107,6 @@ class Game{
 				return man;
 			});
 			game._gists = game._gists.concat(mans);
-			console.log(14, game._gists, game._gists.length);
 		}
 		else{
 			throw '[Game.constructor]: Wrong mans amount';
