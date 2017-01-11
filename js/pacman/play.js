@@ -24,9 +24,6 @@
 
 	function botDraw(){
 		var height = CELL_HEIGHT, width = CELL_WIDTH;
-		var textures = TEXTURES.bot.filter(function(value, key){
-			return /^bot[\d]+$/.test(key);
-		});
 		var draw = function(bot){
 			throw 'bot draw';
 		};
@@ -34,8 +31,7 @@
 	}
 
 	function cellDraw(){
-		var height = canvasCellHeight, width = canvasCellWidth;
-		var textures = canvasTextures.cell;
+		var height = CELL_HEIGHT, width = CELL_WIDTH;
 		var draw = function(cell){
 			throw 'cell draw';
 		};
@@ -43,8 +39,7 @@
 	}
 
 	function fieldDraw(){
-		var height = canvasCellHeight, width = canvasCellWidth;
-		var textures = canvasTextures.field;
+		var height = CELL_HEIGHT, width = CELL_WIDTH;
 		var draw = function(field){
 			throw 'field draw';
 		};
@@ -52,8 +47,7 @@
 	}
 
 	function foodDraw(){
-		var height = canvasCellHeight, width = canvasCellWidth;
-		var textures = canvasTextures.food;
+		var height = CELL_HEIGHT, width = CELL_WIDTH;
 		var draw = function(food){
 			throw 'food draw';
 		};
@@ -61,8 +55,7 @@
 	}
 
 	function gameDraw(){
-		var height = canvasCellHeight, width = canvasCellWidth;
-		var textures = canvasTextures.game;
+		var height = CELL_HEIGHT, width = CELL_WIDTH;
 		var draw = function(game){
 			throw 'game draw';
 		};
@@ -70,8 +63,7 @@
 	}
 
 	function manDraw(){
-		var height = canvasCellHeight, width = canvasCellWidth;
-		var textures = canvasTextures.man;
+		var height = CELL_HEIGHT, width = CELL_WIDTH;
 		var draw = function(man){
 			throw 'man draw';
 		};
@@ -79,8 +71,7 @@
 	}
 
 	function wallDraw(){
-		var height = canvasCellHeight, width = canvasCellWidth;
-		var textures = canvasTextures.wall;
+		var height = CELL_HEIGHT, width = CELL_WIDTH;
 		var draw = function(wall){
 			var x = wall.cell.xIndex;
 			var y = wall.cell.yIndex;
@@ -95,19 +86,19 @@
 			amount: 4,
 			0: {
 				cell: 'b1',
-				texture: canvasTextures.bot0,
+				texture: TEXTURES.bot0,
 			},
 			1: {
 				cell: 'b2',
-				texture: canvasTextures.bot1,
+				texture: TEXTURES.bot1,
 			},
 			2: {
 				cell: 'b1',
-				texture: canvasTextures.bot2,
+				texture: TEXTURES.bot2,
 			},
 			3: {
 				cell: 'b2',
-				texture: canvasTextures.bot3,
+				texture: TEXTURES.bot3,
 			},
 		},
 
@@ -115,19 +106,21 @@
 
 		field: {
 			cells: {
-				_default: { draw: cellDraw(), },
+				_default: {
+					draw: cellDraw(),
+					texture: TEXTURES.field,
+				},
 				'0:1': {},
 				0: {},
 			},
 			draw: fieldDraw(),
 			height: 10,
 			width: 10,
-			visible: { height: 4, left: 0, top: 0, width: 4, },
 		},
 
 		foods: {
 			_default: { draw: foodDraw(), },
-			f1: { texture: canvasTextures.food1, },
+			f1: { texture: TEXTURES.food1, },
 		},
 
 		mans: {
@@ -135,7 +128,7 @@
 			amount: 1,
 			0: {
 				cell: 'm1',
-				texture: canvasTextures.man1,
+				texture: TEXTURES.man1,
 			},
 		},
 
@@ -152,45 +145,52 @@
 		  wTR,  wH,  wH,  wH,  wH,  wH,  wH,  wH,  wH, wLT \
 		',
 
+		visible: {
+			height: 4,
+			left: 0,
+			top: 0,
+			width: 4,
+		},
+
 		walls: {
 			_default: { draw: wallDraw(), },
-			wB: { texture: canvasTextures.w1b, },
-			wBL: { texture: canvasTextures.w1bl, },
-			wBLT: { texture: canvasTextures.w1blt, },
-			wH: { texture: canvasTextures.w1h, },
-			wL: { texture: canvasTextures.w1l, },
-			wLT: { texture: canvasTextures.w1lt, },
-			wLTR: { texture: canvasTextures.w1ltr, },
-			wR: { texture: canvasTextures.w1r, },
-			wRB: { texture: canvasTextures.w1rb, },
-			wRBL: { texture: canvasTextures.w1rbl, },
-			wT: { texture: canvasTextures.w1t, },
-			wTR: { texture: canvasTextures.w1tr, },
-			wTRB: { texture: canvasTextures.w1trb, },
-			wTRBL: { texture: canvasTextures.w1trbl, },
-			wP: { texture: canvasTextures.w1p, },
-			wV: { texture: canvasTextures.w1v, },
+			wB: { texture: TEXTURES.w1b, },
+			wBL: { texture: TEXTURES.w1bl, },
+			wBLT: { texture: TEXTURES.w1blt, },
+			wH: { texture: TEXTURES.w1h, },
+			wL: { texture: TEXTURES.w1l, },
+			wLT: { texture: TEXTURES.w1lt, },
+			wLTR: { texture: TEXTURES.w1ltr, },
+			wR: { texture: TEXTURES.w1r, },
+			wRB: { texture: TEXTURES.w1rb, },
+			wRBL: { texture: TEXTURES.w1rbl, },
+			wT: { texture: TEXTURES.w1t, },
+			wTR: { texture: TEXTURES.w1tr, },
+			wTRB: { texture: TEXTURES.w1trb, },
+			wTRBL: { texture: TEXTURES.w1trbl, },
+			wP: { texture: TEXTURES.w1p, },
+			wV: { texture: TEXTURES.w1v, },
 		},
 
 	};
 
 	var game = new Game(gameOptions);
+//	console.log(game.height * )
 
 	// test
 	$("document").ready(function(){
 		var canvas = document.getElementById('easel');
-		canvas.height = canvasCellHeight * canvasCellsVerticallyAmount;
-		canvas.width = canvasCellWidth * canvasCellsHorizontalAmount;
+		canvas.height = CELL_HEIGHT * CELLS_HAMOUNT;
+		canvas.width = CELL_WIDTH * CELLS_WAMOUNT;
 		var context = canvas.getContext('2d');
 		var x = 0, y = 0;
-		drawCellXY(canvasTextures.w1rb, x, y);
-		drawCellXY(canvasTextures.w1h, x + 1, y);
-		drawCellXY(canvasTextures.w1bl, x + 2, y);
-		drawCellXY(canvasTextures.w1v, x + 0, y + 1);
-		drawCellXY(canvasTextures.w1v, x + 2, y + 1);
-		drawCellXY(canvasTextures.w1tr, x, y + 2);
-		drawCellXY(canvasTextures.w1h, x + 1, y + 2);
-		drawCellXY(canvasTextures.w1lt, x + 2, y + 2);
-
+		draw(TEXTURES.w1rb, x, y);
+		draw(TEXTURES.w1h, x + 1, y);
+		draw(TEXTURES.w1bl, x + 2, y);
+		draw(TEXTURES.w1v, x + 0, y + 1);
+		draw(TEXTURES.w1v, x + 2, y + 1);
+		draw(TEXTURES.w1tr, x, y + 2);
+		draw(TEXTURES.w1h, x + 1, y + 2);
+		draw(TEXTURES.w1lt, x + 2, y + 2);
 	});
 })();

@@ -13,6 +13,27 @@ class Game{
 		// field
 		if(options.field){
 			game._field = new Field(game, options.field);
+			if(!options.visible){
+				game._visible = {
+					height: game.field.height,
+					left: 0,
+					top: 0,
+					width: game.field.width,
+				};
+			}
+			else if(options.visible.height>0 && options.visible.width>0){
+				game._visible = {
+					height: options.visible.height,
+					left: Math.max(options.visible.left, 0),
+					top: Math.max(options.visible.top, 0),
+					width: options.visible.width,
+				};
+				game._visible.left = Math.min(game.vleft, game.field.width - game.vwidth);
+				game._visible.top = Math.min(game.vtop, game.field.height - game.vheight);
+			}
+			else{
+				throw '[Game.constructor]: Wrong visible size';
+			}
 		}
 		else{
 			throw '[Game.constructor]: Wrong field cfg';
@@ -120,33 +141,40 @@ class Game{
 		}
 	}
 
-	get bots(){
-		return this._gists.filter(function(g){
-			return g instanceof Bot;
+	get bots(){ return this._gists.filter(function(g){ return g instanceof Bot; }); }
+	get foods(){ return this._gists.filter(function(g){ return g instanceof Food; }); }
+	get mans(){ return this._gists.filter(function(g){ return g instanceof Man; }); }
+	get walls(){ return this._gists.filter(function(g){ return g instanceof Wall; }); }
+	get field(){ return this._field; }
+
+
+	get visibleCellsIndex(){
+		return this._cells.map(function(cell){
+			return {
+				index: cell.index, 
+				x: cell.xIndex, 
+				y: cell.yIndex
+			};
+		}).filter(function(cell){
+			if(c.xIndex<this.vleft) return false;
+			if(c.yIndex<this.vtop) return false;
+			if(this.vright<=c.xIndex) return false;
+			if(this.vbottom<=c.yIndex) return false;
+			return true;
+		}).map(function(c){
+			return c.index;
 		});
 	}
 
-	get foods(){
-		return this._gists.filter(function(g){
-			return g instanceof Food;
-		});
-	}
+	get vb(){ return this.vt + this.vh; }
+	get vh(){ return this._visible.height; }
+	get vl(){ return this._visible.left; }
+	get vr(){ return this.vl + this.vw; }
+	get vt(){ return this._visible.top; }
+	get vw(){ return this._visible.width; }
 
-	get mans(){
-		return this._gists.filter(function(g){
-			return g instanceof Man;
-		});
-	}
 
-	get walls(){
-		return this._gists.filter(function(g){
-			return g instanceof Wall;
-		});
-	}
 
-	get field(){
-		return this._field;
-	}
 
 	gists(is){
 		return this._gists.filter(function(g){

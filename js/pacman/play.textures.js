@@ -47,6 +47,8 @@ var playTextures = function(){
 			S: img([ 'b_s1', 'b_s2', ]),
 			T: img([ 'b3p', 'b3t1', 'b3t2', 'b3t1', 'b3t2', 'b3t1', 'b3p', ]),
 		},
+		cell: {},
+		field: {},
 		food1: img('f1'),
 		man1: {
 			B: img([ 'm1p', 'm1b1', 'm1b2', 'm1b3', 'm1b4', 'm1b5', 'm1p', ]),
