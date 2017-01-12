@@ -7,11 +7,33 @@
 	const CELLS_WAMOUNT = 4*CELLS_AMOUNT;
 	const TEXTURES = playTextures();
 
-	function __draw(canvas, img, x, y, width, height){
-		canvas.getContext('2d').drawImage(img, x, y, width, height);
+	// convas, image, coords, size
+	function __draw(canvas, image, coord, size){
+		coord = Object.assign({x: 0, y: 0}, coord)
+		size = Object.assign({w: 0, h: 0}, size)
+		var contex = canvas.getContext('2d');
+		var call = []
+		contex.drawImage.aplly(image, coord.x, coord.y, size.w, size.h);
+	}
+
+	function __clear(c, x=None, y=None, w=None, height=None){
+		c.getContext('2d').clearRect(x || 0, y || 0, w || c.width, h || c.height);
 	}
 
 	var drawCellLT = { x: 0, y:0 }; // visible left top cell
+
+ctx.clearRect(10, 10, 200, 200); // Очистка области указанного размера и положения
+ctx.clearRect(0, 0, canvas.width, canvas.height); // Очиста всего холста 
+
+	function __clear(xIndex, yIndex, width, height){
+		var canvas = document.getElementById('easel');
+		var x = xIndex * CELL_WIDTH;
+		var y = yIndex * CELL_HEIGHT;
+		var w = width || CELL_WIDTH;
+		var h = height || CELL_HEIGHT;
+		__draw(canvas, img, x, y, w, h);
+	}
+
 
 	function draw(img, xIndex, yIndex, width, height){
 		var canvas = document.getElementById('easel');

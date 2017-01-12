@@ -3,11 +3,29 @@
 // ячейка
 class Cell extends Gameable{
 
-	get gists(){ return this._gists; }
-	get i(){ return this.index; }
-	get index(){ return this._index; }
-	get x(){ return this.i % this.field.width; }
-	get y(){ return this.i / this.field.width; }
+	get g(){
+		return this.gists;
+	}
+
+	get gists(){
+		return this._gists;
+	}
+
+	get i(){
+		return this.index;
+	}
+
+	get index(){
+		return this._index;
+	}
+
+	get ix(){
+		return this.i % this.field.width;
+	}
+
+	get iy(){
+		return this.i / this.field.width;
+	}
 
 	constructor(game, options){
 		super('cell', game, options);

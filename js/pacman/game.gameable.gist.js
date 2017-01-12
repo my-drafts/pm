@@ -3,8 +3,13 @@
 // сущьность
 class Gist extends Gameable{
 
-	get class(){ return this._class; }
-	get cell(){ return this._cell; }
+	get class(){
+		return this._class;
+	}
+
+	get cell(){
+		return this._cell;
+	}
 
 	constructor(is, game, options){
 		super(is, game, options);
@@ -25,7 +30,10 @@ class Gist extends Gameable{
 		}
 		else throw '[Gist.bind]: Wrong cell';
 	}
-	unbind(){ this._cell = false; }
+
+	unbind(){
+		this._cell = false;
+	}
 
 }
 
