@@ -3,12 +3,10 @@
 class Game{
 	constructor(options){
 		var game = this;
+		this._tactIndex = undefined;
 
-		if(options && options instanceof Object){
-		}
-		else{
-			throw '[Game.constructor]: Wrong options';
-		}
+		if(options && options instanceof Object) ;
+		else throw '[Game.constructor]: Wrong options';
 
 		// field
 		if(options.field){
@@ -149,7 +147,7 @@ class Game{
 
 
 	get visibleCellsIndex(){
-		return this._cells.map(function(cell){
+		return this.field.c.map(function(cell){
 			return {
 				index: cell.index, 
 				x: cell.xIndex, 
@@ -173,8 +171,11 @@ class Game{
 	get vt(){ return this._visible.top; }
 	get vw(){ return this._visible.width; }
 
+	get tactIndex(){ return this._tactIndex; }
+	
+	tact(){
 
-
+	}
 
 	gists(is){
 		return this._gists.filter(function(g){

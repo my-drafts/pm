@@ -2,6 +2,15 @@
 
 // поле
 class Field extends Gameable{
+
+	get c(){ return this.cells; }
+	get cells(){ return this._cells; }
+	get h(){ return this.height; }
+	get height(){ return this._height; }
+	get size(){ return this.h*this.w; }
+	get w(){ return this.width; }
+	get width(){ return this._width; }
+
 	constructor(game, options){
 		super('field', game, options);
 
@@ -39,14 +48,6 @@ class Field extends Gameable{
 			throw '[Field.constructor]: Wrong field';
 		}
 	}
-
-	get c(){ return this.cells; }
-	get cells(){ return this._cells; }
-	get h(){ return this.height; }
-	get height(){ return this._height; }
-	get size(){ return this.h*this.w; }
-	get w(){ return this.width; }
-	get width(){ return this._width; }
 
 	bind(gist, cellIndex){
 		if(gist instanceof Gist){

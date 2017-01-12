@@ -3,8 +3,8 @@
 (function(){
 	const CELL_SIZE = 16, CELLS_AMOUNT = 5;
 	const CELL_HEIGHT = CELL_SIZE, CELL_WIDTH = CELL_SIZE;
-	const CELLS_HAMOUNT = 4*CELLS_AMOUNT;
-	const CELLS_WAMOUNT = 3*CELLS_AMOUNT;
+	const CELLS_HAMOUNT = 3*CELLS_AMOUNT;
+	const CELLS_WAMOUNT = 4*CELLS_AMOUNT;
 	const TEXTURES = playTextures();
 
 	function __draw(canvas, img, x, y, width, height){
@@ -175,6 +175,7 @@
 	};
 
 	var game = new Game(gameOptions);
+	game.tact();
 //	console.log(game.height * )
 
 	// test
