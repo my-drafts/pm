@@ -2,10 +2,6 @@
 
 class Actor extends Gist{
 	
-	get i(){
-		return this.index;
-	}
-
 	get index(){
 		return this._index;
 	}

@@ -3,7 +3,7 @@
 class Gameable{
 
 	get field(){
-		return this._game.field;
+		return this.game.field;
 	}
 
 	get game(){
@@ -40,16 +40,22 @@ class Gameable{
 		else throw '[Gameable.constructor]: Wrong options in ' + this._is;
 
 		// draw
-		if(typeof options.draw=='function'){
+		if(typeof options.draw=='function' || typeof options.undraw=='function'){
 			this._painted = false;
 			this._draw = options.draw;
+			this._undraw = options.undraw;
 		}
-		else throw '[Gameable.constructor]: Wrong draw in ' + this._is;
+		else throw '[Gameable.constructor]: Wrong (draw, undraw) in ' + this._is;
 	}
 
 	draw(){
 		!this._painted && this._draw && this._draw(this);
 		this._painted = true;
+	}
+
+	undraw(){
+		this._undraw && this._undraw(this);
+		//this._painted = false;
 	}
 
 }

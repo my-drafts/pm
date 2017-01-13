@@ -1,6 +1,74 @@
 'use strict';
 
 class Game{
+
+	get b(){
+		return this.bots; 
+	}
+
+	get bots(){
+		return this.gists('bot'); 
+	}
+
+	get f(){
+		return this.foods;
+	}
+
+	get field(){
+		return this._field;
+	}
+
+	get foods(){
+		return this.gists('food');
+	}
+
+	get g(){
+		return this.gists;
+	}
+
+	get gists(){
+		return this._gists;
+	}
+
+	get m(){
+		return this.mans;
+	}
+
+	get mans(){
+		return this.gists('man');
+	}
+
+	get w(){
+		return this.walls;
+	}
+
+	get walls(){
+		return this.gists('wall');
+	}
+
+	get vc(){
+		return this.visibleCellsIndex();
+	}
+
+	get visibleCellsIndex(){
+		return this.field.c.map(function(cell){
+			return { i: cell.i, ix: cell.ix, iy: cell.iy };
+		}).filter(function(c){
+			return (this.vl<=c.ix && c.ix<this.vr) && (this.vt<=c.iy && c.iy<this.vb);
+		}).map(function(c){
+			return c.index;
+		});
+	}
+
+	get vb(){ return this.vt + this.vh; }
+	get vh(){ return this._visible.height; }
+	get vl(){ return this._visible.left; }
+	get vr(){ return this.vl + this.vw; }
+	get vt(){ return this._visible.top; }
+	get vw(){ return this._visible.width; }
+
+	get tactIndex(){ return this._tactIndex; }
+	
 	constructor(options){
 		var game = this;
 		this._tactIndex = undefined;
@@ -139,48 +207,21 @@ class Game{
 		}
 	}
 
-	get bots(){ return this._gists.filter(function(g){ return g instanceof Bot; }); }
-	get foods(){ return this._gists.filter(function(g){ return g instanceof Food; }); }
-	get mans(){ return this._gists.filter(function(g){ return g instanceof Man; }); }
-	get walls(){ return this._gists.filter(function(g){ return g instanceof Wall; }); }
-	get field(){ return this._field; }
-
-
-	get visibleCellsIndex(){
-		return this.field.c.map(function(cell){
-			return {
-				index: cell.index, 
-				x: cell.xIndex, 
-				y: cell.yIndex
-			};
-		}).filter(function(cell){
-			if(c.xIndex<this.vleft) return false;
-			if(c.yIndex<this.vtop) return false;
-			if(this.vright<=c.xIndex) return false;
-			if(this.vbottom<=c.yIndex) return false;
-			return true;
-		}).map(function(c){
-			return c.index;
-		});
-	}
-
-	get vb(){ return this.vt + this.vh; }
-	get vh(){ return this._visible.height; }
-	get vl(){ return this._visible.left; }
-	get vr(){ return this.vl + this.vw; }
-	get vt(){ return this._visible.top; }
-	get vw(){ return this._visible.width; }
-
-	get tactIndex(){ return this._tactIndex; }
-	
 	tact(){
 		console.log(1);
 	}
 
-	gists(is){
-		return this._gists.filter(function(g){
-			return g.is==String(is).toLowerCase();
-		});
+	gists(filter){
+		if(typeof filter===function){
+			return this.g.filter(filter);		
+		}
+		else if(typeof filter==='string' || filter instanceof String){
+			var is = String(is).toLowerCase();
+			return this.g.filter(function(g){
+				return g.is==is;
+			});
+		}
+		return this.g;
 	}
 
 /*

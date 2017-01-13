@@ -25,10 +25,10 @@ class Gist extends Gameable{
 	}
 
 	bind(cell){
-		if(cell instanceof Cell){
+		if(!(cell instanceof Cell)) throw '[Gist.bind]: Wrong cell';
+		else{
 			this._cell = cell;
 		}
-		else throw '[Gist.bind]: Wrong cell';
 	}
 
 	unbind(){
@@ -36,4 +36,3 @@ class Gist extends Gameable{
 	}
 
 }
-

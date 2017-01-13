@@ -3,13 +3,33 @@
 // поле
 class Field extends Gameable{
 
-	get c(){ return this.cells; }
-	get cells(){ return this._cells; }
-	get h(){ return this.height; }
-	get height(){ return this._height; }
-	get size(){ return this.h*this.w; }
-	get w(){ return this.width; }
-	get width(){ return this._width; }
+	get c(){
+		return this.cells;
+	}
+
+	get cells(){
+		return this._cells;
+	}
+
+	get h(){
+		return this.height;
+	}
+
+	get height(){
+		return this._height;
+	}
+
+	get size(){
+		return this.h*this.w;
+	}
+
+	get w(){
+		return this.width;
+	}
+
+	get width(){
+		return this._width;
+	}
 
 	constructor(game, options){
 		super('field', game, options);
@@ -20,9 +40,7 @@ class Field extends Gameable{
 			field._height = options.height;
 			field._width = options.width;
 		}
-		else{
-			throw '[Field.constructor]: Wrong size';
-		}
+		else throw '[Field.constructor]: Wrong size';
 
 		if(options.cells && options.cells._default){
 			var h = field._height;
@@ -44,9 +62,7 @@ class Field extends Gameable{
 				return cell;
 			});
 		}
-		else{
-			throw '[Field.constructor]: Wrong field';
-		}
+		else throw '[Field.constructor]: Wrong field';
 	}
 
 	bind(gist, cellIndex){
@@ -56,18 +72,14 @@ class Field extends Gameable{
 			gist.bind(cell);
 			cell.bind(gist);
 		}
-		else{
-			throw '[Field.bind]: Wrong gist';
-		}
+		else throw '[Field.bind]: Wrong gist';
 	}
 
 	cell(index){
 		if(index in this.cells){
 			return this.cells[index];
 		}
-		else{
-			throw '[Field.cell]: Wrong cell index ';
-		}
+		else throw '[Field.cell]: Wrong cell index ';
 	}
 
 	cellXY(x, y){
@@ -75,22 +87,16 @@ class Field extends Gameable{
 	}
 
 	unbind(gist){
-		if(gist instanceof Gist){
-			if(gist.cell===false){
-				// nothing
-			}
-			else if(gist.cell instanceof Cell){
-				var cell = this.cell(gist.cell.index);
-				cell.unbind(gist);				
-			}
-			else{
-				throw '[Field.unbind]: gist unbind corrupted';
-			}
+		if(!(gist instanceof Gist)) throw '[Field.unbind]: Wrong gist';
+		else if(gist.cell instanceof Cell){
+			var cell = this.cell(gist.cell.index);
+			cell.unbind(gist);				
 			gist.unbind();
 		}
-		else{
-			throw '[Field.unbind]: Wrong gist';
+		else if(gist.cell===false){
+			gist.unbind();
 		}
+		else throw '[Field.unbind]: gist unbind corrupted';
 	}
 
 }

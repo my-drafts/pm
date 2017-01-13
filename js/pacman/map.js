@@ -1,25 +1,21 @@
 'use strict';
 
 class Map{
-	constructor(options){
-		if(!options){
-			throw '[Map.constructor]: Wrong options';
-		}
-		else if(options instanceof Array){
-			this._map = options.slice();
-		}
-		else if(options instanceof String || typeof options==='string'){
-			this._map = options.split(',').map(function(e, i){
-				return e.trim();
-			});
-		}
-		else{
-			throw '[Map.constructor]: Wrong options';
-		}
-	}
 
 	get size(){
 		return this._map.length;
+	}
+
+	constructor(options){
+		if(options && options instanceof Array){
+			this._map = options.slice();
+		}
+		else if(options && options instanceof String || typeof options==='string'){
+			this._map = options.split(',').map(function(mapElement, index){
+				return mapElement.trim();
+			});
+		}
+		else throw '[Map.constructor]: Wrong options';
 	}
 
 	filter(callback){
@@ -31,4 +27,5 @@ class Map{
 			return m.cellIndex;
 		});
 	}
+	
 }

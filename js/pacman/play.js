@@ -19,16 +19,17 @@
 		contex.drawImage.aplly(image, coord.x, coord.y, size.w, size.h);
 	}
 
-	function __clear(c, x=None, y=None, w=None, height=None){
+	function __undraw(c, x=None, y=None, w=None, height=None){
 		c.getContext('2d').clearRect(x || 0, y || 0, w || c.width, h || c.height);
 	}
 
 	var drawCellLT = { x: 0, y:0 }; // visible left top cell
 
-ctx.clearRect(10, 10, 200, 200); // Очистка области указанного размера и положения
-ctx.clearRect(0, 0, canvas.width, canvas.height); // Очиста всего холста 
+//ctx.clearRect(10, 10, 200, 200); // Очистка области указанного размера и положения
+//ctx.clearRect(0, 0, canvas.width, canvas.height); // Очиста всего холста 
 
-	function __clear(xIndex, yIndex, width, height){
+/*
+	function __undraw(xIndex, yIndex, width, height){
 		var canvas = document.getElementById('easel');
 		var x = xIndex * CELL_WIDTH;
 		var y = yIndex * CELL_HEIGHT;
@@ -36,7 +37,6 @@ ctx.clearRect(0, 0, canvas.width, canvas.height); // Очиста всего х�
 		var h = height || CELL_HEIGHT;
 		__draw(canvas, img, x, y, w, h);
 	}
-
 
 	function draw(img, xIndex, yIndex, width, height){
 		var canvas = document.getElementById('easel');
@@ -46,7 +46,7 @@ ctx.clearRect(0, 0, canvas.width, canvas.height); // Очиста всего х�
 		var h = height || CELL_HEIGHT;
 		__draw(canvas, img, x, y, w, h);
 	}
-
+*/
 	function botDraw(){
 		var height = CELL_HEIGHT, width = CELL_WIDTH;
 		var draw = function(bot){
@@ -107,7 +107,10 @@ ctx.clearRect(0, 0, canvas.width, canvas.height); // Очиста всего х�
 
 	var gameOptions = {
 		bots: {
-			_default: { draw: botDraw(), },
+			_default: {
+				draw: __draw,
+				undraw: __undraw
+			},
 			amount: 4,
 			0: {
 				cell: 'b1',
@@ -127,20 +130,25 @@ ctx.clearRect(0, 0, canvas.width, canvas.height); // Очиста всего х�
 			},
 		},
 
-		draw: gameDraw(),
+		cellHieght: CELL_HEIGHT,
+		cellWidth: CELL_WIDTH,
+		draw: __draw,
+		undraw: __undraw,
 
 		field: {
 			cells: {
 				_default: {
-					draw: cellDraw(),
+					draw: __draw,
 					texture: TEXTURES.field,
+					undraw: __undraw,
 				},
 				'0:1': {},
 				0: {},
 			},
-			draw: fieldDraw(),
+			draw: __draw,
 			height: 10,
 			width: 10,
+			undraw: __undraw,
 		},
 
 		foods: {

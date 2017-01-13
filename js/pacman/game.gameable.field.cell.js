@@ -11,6 +11,10 @@ class Cell extends Gameable{
 		return this._gists;
 	}
 
+	get h(){
+		return this.game.cellHeight;
+	}
+
 	get i(){
 		return this.index;
 	}
@@ -23,8 +27,16 @@ class Cell extends Gameable{
 		return this.i % this.field.width;
 	}
 
+	get ixy(){
+		return { i: this.i, ix: this.ix, iy: this.iy };
+	}
+
 	get iy(){
 		return this.i / this.field.width;
+	}
+
+	get w(){
+		return this.game.cellWidth;
 	}
 
 	constructor(game, options){
@@ -44,6 +56,7 @@ class Cell extends Gameable{
 		}
 		else throw '[Cell.bind]: Wrong gist';
 	}
+
 	unbind(gist){
 		if(gist instanceof Gist){
 			this._gists = this._gists.filter(function(g){
@@ -53,10 +66,17 @@ class Cell extends Gameable{
 		else throw '[Cell.unbind]: Wrong gist';
 	}
 
-	gists(is){
-		return this._gists.filter(function(g){
-			return g.is==String(is).toLowerCase();
-		});
+	gists(filter){
+		if(typeof filter===function){
+			return this.gists.filter(filter);		
+		}
+		else if(typeof filter==='string' || filter instanceof String){
+			var is = String(is).toLowerCase();
+			return this.g.filter(function(g){
+				return g.is==is;
+			});
+		}
+		return this.g;
 	}
 
 }
