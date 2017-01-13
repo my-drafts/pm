@@ -174,7 +174,7 @@ class Game{
 	get tactIndex(){ return this._tactIndex; }
 	
 	tact(){
-
+		console.log(1);
 	}
 
 	gists(is){

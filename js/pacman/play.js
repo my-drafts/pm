@@ -8,9 +8,12 @@
 	const TEXTURES = playTextures();
 
 	// convas, image, coords, size
-	function __draw(canvas, image, coord, size){
-		coord = Object.assign({x: 0, y: 0}, coord)
-		size = Object.assign({w: 0, h: 0}, size)
+	function __draw(canvas, image, t, s){
+		var src = s && s.x && s.y && s.w>0 && s.h>0 ? [s.x, s.y, s.w, sh] : [];
+		var trg = t && t.x && t.y ? [t.x, t.y].concat(t.w>0 && t.h>0 ? [t.w, t.h] : []) : [0, 0];
+		
+		var xy = coord ? Object.assign({x: 0, y: 0}, coord) : false;
+		var wh = size && size.w>0 && size.h>0 ? Object.assign({w: 0, h: 0}, size) : false;
 		var contex = canvas.getContext('2d');
 		var call = []
 		contex.drawImage.aplly(image, coord.x, coord.y, size.w, size.h);
