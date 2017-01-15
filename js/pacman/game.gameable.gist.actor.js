@@ -6,6 +6,7 @@ class Actor extends Gist{
 		return this._index;
 	}
 
+
 	constructor(is, game, options) {
 		super(is, game, options);
 

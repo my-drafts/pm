@@ -4,40 +4,58 @@
 class Cell extends Gameable{
 
 	get g(){
-		return this.gists;
-	}
-
-	get gists(){
 		return this._gists;
 	}
 
 	get h(){
-		return this.game.cellHeight;
+		return this.height;
 	}
 
 	get i(){
 		return this.index;
 	}
 
+	get ix(){
+		return this.xIndex;
+	}
+
+	get ixy(){
+		return { i: this.index, ix: this.xIndex, iy: this.yIndex };
+	}
+
+	get iy(){
+		return this.yIndex;
+	}
+
+	get w(){
+		return this.width;
+	}
+
+
+	get gists(){
+		return this._gists;
+	}
+
+	get height(){
+		return this.game.cellHeight;
+	}
+
 	get index(){
 		return this._index;
 	}
 
-	get ix(){
-		return this.i % this.field.width;
+	get xIndex(){
+		return this.index % this.field.width;
 	}
 
-	get ixy(){
-		return { i: this.i, ix: this.ix, iy: this.iy };
+	get yIndex(){
+		return this.index / this.field.width;
 	}
 
-	get iy(){
-		return this.i / this.field.width;
-	}
-
-	get w(){
+	get width(){
 		return this.game.cellWidth;
 	}
+
 
 	constructor(game, options){
 		super('cell', game, options);
@@ -49,6 +67,7 @@ class Cell extends Gameable{
 		}
 		else throw '[Cell.constructor]: Wrong cell index';
 	}
+
 
 	bind(gist){
 		if(gist instanceof Gist){
@@ -67,17 +86,16 @@ class Cell extends Gameable{
 	}
 
 	gists(filter){
-		if(typeof filter===function){
-			return this.gists.filter(filter);		
+		if(typeof filter==='function'){
+			return this._gists.filter(filter);		
 		}
 		else if(typeof filter==='string' || filter instanceof String){
-			var is = String(is).toLowerCase();
-			return this.g.filter(function(g){
+			var is = String(filter).toLowerCase();
+			return this._gists.filter(function(g){
 				return g.is==is;
 			});
 		}
-		return this.g;
+		return this._gists;
 	}
 
 }
-

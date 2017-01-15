@@ -11,6 +11,7 @@ class Gist extends Gameable{
 		return this._cell;
 	}
 
+
 	constructor(is, game, options){
 		super(is, game, options);
 
@@ -24,11 +25,16 @@ class Gist extends Gameable{
 		else throw '[Gist.constructor]: Wrong texture in ' + this.is;
 	}
 
+
 	bind(cell){
 		if(!(cell instanceof Cell)) throw '[Gist.bind]: Wrong cell';
 		else{
 			this._cell = cell;
 		}
+	}
+
+	draw(){
+		cosole.log('!1!');
 	}
 
 	unbind(){

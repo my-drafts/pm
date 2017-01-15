@@ -22,6 +22,7 @@ class Gameable{
 		this._painted = Boolean(_painted);
 	}
 
+
 	constructor(is, game, options){
 		// is
 		if(is && (typeof is=='string' || is instanceof String)){
@@ -48,7 +49,9 @@ class Gameable{
 		else throw '[Gameable.constructor]: Wrong (draw, undraw) in ' + this._is;
 	}
 
+
 	draw(){
+		console.log('!2!');
 		!this._painted && this._draw && this._draw(this);
 		this._painted = true;
 	}

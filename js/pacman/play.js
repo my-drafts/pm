@@ -9,18 +9,14 @@
 
 	// convas, image, coords, size
 	function __draw(canvas, image, t, s){
-		var src = s && s.x && s.y && s.w>0 && s.h>0 ? [s.x, s.y, s.w, sh] : [];
 		var trg = t && t.x && t.y ? [t.x, t.y].concat(t.w>0 && t.h>0 ? [t.w, t.h] : []) : [0, 0];
-		
-		var xy = coord ? Object.assign({x: 0, y: 0}, coord) : false;
-		var wh = size && size.w>0 && size.h>0 ? Object.assign({w: 0, h: 0}, size) : false;
-		var contex = canvas.getContext('2d');
-		var call = []
-		contex.drawImage.aplly(image, coord.x, coord.y, size.w, size.h);
+		var src = trg.length==4 && s && s.x && s.y && s.w>0 && s.h>0 ? [s.x, s.y, s.w, sh] : [];
+		canvas.getContext('2d').drawImage.apply(canvas, [image].concat(trg, src));
 	}
 
-	function __undraw(c, x=None, y=None, w=None, height=None){
-		c.getContext('2d').clearRect(x || 0, y || 0, w || c.width, h || c.height);
+	function __undraw(canvas, trg){
+		var t = Object.assign({ x: 0, y: 0, w: canvas.width, h: canvas.height }, trg);
+		canvas.getContext('2d').clearRect(t.x, t.y, t.w, t.h);
 	}
 
 	var drawCellLT = { x: 0, y:0 }; // visible left top cell
@@ -218,13 +214,13 @@
 		canvas.width = CELL_WIDTH * CELLS_WAMOUNT;
 		var context = canvas.getContext('2d');
 		var x = 0, y = 0;
-		draw(TEXTURES.w1rb, x, y);
-		draw(TEXTURES.w1h, x + 1, y);
-		draw(TEXTURES.w1bl, x + 2, y);
-		draw(TEXTURES.w1v, x + 0, y + 1);
-		draw(TEXTURES.w1v, x + 2, y + 1);
-		draw(TEXTURES.w1tr, x, y + 2);
-		draw(TEXTURES.w1h, x + 1, y + 2);
-		draw(TEXTURES.w1lt, x + 2, y + 2);
+		__draw(canvas, TEXTURES.w1rb, { x: x, y: y });
+		__draw(canvas, TEXTURES.w1h, { x: x + 1, y: y });
+		__draw(canvas, TEXTURES.w1bl, { x: x + 2, y: y });
+		__draw(canvas, TEXTURES.w1v, { x: x + 0, y: y + 1 });
+		__draw(canvas, TEXTURES.w1v, { x: x + 2, y: y + 1 });
+		__draw(canvas, TEXTURES.w1tr, { x: x, y: y + 2 });
+		__draw(canvas, TEXTURES.w1h, { x: x + 1, y: y + 2 });
+		__draw(canvas, TEXTURES.w1lt, { x: x + 2, y: y + 2 });
 	});
 })();

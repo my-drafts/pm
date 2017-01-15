@@ -6,12 +6,53 @@ class Game{
 		return this.bots; 
 	}
 
-	get bots(){
-		return this.gists('bot'); 
-	}
-
 	get f(){
 		return this.foods;
+	}
+
+	get g(){
+		return this.gists;
+	}
+
+	get m(){
+		return this.mans;
+	}
+
+	get vb(){
+		return this.visibleBottom;
+	}
+
+	get vc(){
+		return this.visibleCellsIndex;
+	}
+
+	get vh(){
+		return this.visibleHieghtIndex;
+	}
+
+	get vl(){
+		return this.visibleLeftIndex;
+	}
+
+	get vr(){
+		return this.visibleRightIndex;
+	}
+
+	get vt(){
+		return this.visibleTopIndex;
+	}
+
+	get vw(){
+		return this.visibleWidthIndex;
+	}
+
+	get w(){
+		return this.walls;
+	}
+
+
+	get bots(){
+		return this.gists('bot'); 
 	}
 
 	get field(){
@@ -22,32 +63,20 @@ class Game{
 		return this.gists('food');
 	}
 
-	get g(){
-		return this.gists;
-	}
-
 	get gists(){
 		return this._gists;
-	}
-
-	get m(){
-		return this.mans;
 	}
 
 	get mans(){
 		return this.gists('man');
 	}
 
-	get w(){
-		return this.walls;
+	get tactIndex(){
+		return this._tactIndex;
 	}
 
-	get walls(){
-		return this.gists('wall');
-	}
-
-	get vc(){
-		return this.visibleCellsIndex();
+	get visibleBottomIndex(){
+		return this.visibleTopIndex + this.visibleHieghtIndex;
 	}
 
 	get visibleCellsIndex(){
@@ -60,18 +89,35 @@ class Game{
 		});
 	}
 
-	get vb(){ return this.vt + this.vh; }
-	get vh(){ return this._visible.height; }
-	get vl(){ return this._visible.left; }
-	get vr(){ return this.vl + this.vw; }
-	get vt(){ return this._visible.top; }
-	get vw(){ return this._visible.width; }
+	get visibleHieghtIndex(){
+		return this._visible.height;
+	}
 
-	get tactIndex(){ return this._tactIndex; }
+	get visibleLeftIndex(){
+		return this._visible.left;
+	}
+
+	get visibleRightIndex(){
+		return this.visibleLeftIndex + this.visibleWidthIndex;
+	}
+
+	get visibleTopIndex(){
+		return this._visible.top;
+	}
+
+	get visibleWidthIndex(){
+		return this._visible.width;
+	}
+
+	get walls(){
+		return this.gists('wall');
+	}
+
 	
 	constructor(options){
 		var game = this;
-		this._tactIndex = undefined;
+
+		game._tactIndex = 0;
 
 		if(options && options instanceof Object) ;
 		else throw '[Game.constructor]: Wrong options';
@@ -97,25 +143,18 @@ class Game{
 				game._visible.left = Math.min(game.vleft, game.field.width - game.vwidth);
 				game._visible.top = Math.min(game.vtop, game.field.height - game.vheight);
 			}
-			else{
-				throw '[Game.constructor]: Wrong visible size';
-			}
+			else throw '[Game.constructor]: Wrong visible size';
 		}
-		else{
-			throw '[Game.constructor]: Wrong field cfg';
-		}
+		else throw '[Game.constructor]: Wrong field cfg';
 
 		// gist
 		if(options.maps){
 			game._gists = [];
 			game._maps = new Map(options.maps);
-			if(!(game._maps.size==game._field.size)){
-				throw '[Game.constructor]: Wrong map size';
-			}
+			if(game._maps.size==game._field.size);
+			else throw '[Game.constructor]: Wrong map size';
 		}
-		else{
-			throw '[Game.constructor]: Wrong map cfg';
-		}
+		else throw '[Game.constructor]: Wrong map cfg';
 
 		// walls
 		if(options.walls){
@@ -132,9 +171,7 @@ class Game{
 			}).toArray();
 			game._gists = [].concat.apply(game._gists, walls);
 		}
-		else{
-			throw '[Game.constructor]: Wrong walls cfg';
-		}
+		else throw '[Game.constructor]: Wrong walls cfg';
 
 		// foods
 		if(options.foods){
@@ -151,14 +188,10 @@ class Game{
 			}).toArray();
 			game._gists = [].concat.apply(game._gists, foods);
 		}
-		else{
-			throw '[Game.constructor]: Wrong foods cfg';
-		}
+		else throw '[Game.constructor]: Wrong foods cfg';
 
 		// bots
-		if(!options.bots){
-			throw '[Game.constructor]: Wrong bots cfg';
-		}
+		if(!options.bots) throw '[Game.constructor]: Wrong bots cfg';
 		else if(options.bots.amount>0){
 			var bots = [...Array(options.bots.amount).keys()].map(function(index){
 				var o = Object.assign({index: index}, options.bots._default, options.bots[index]);
@@ -172,17 +205,11 @@ class Game{
 			});
 			game._gists = game._gists.concat(bots);
 		}
-		else{
-			throw '[Game.constructor]: Wrong bots amount';
-		}
+		else throw '[Game.constructor]: Wrong bots amount';
 
 		// man
-		if(!options.mans){
-			throw '[Game.constructor]: Wrong mans cfg';
-		}
-			var m = options.mans;
-			var m1 = options.mans._default;
-		if(options.mans.amount>0){
+		if(!options.mans) throw '[Game.constructor]: Wrong mans cfg';
+		else if(options.mans.amount>0){
 			var mans = [...Array(options.mans.amount).keys()].map(function(index){
 				var o = Object.assign({index: index}, options.mans._default, options.mans[index]);
 				var man = new Man(game, o);
@@ -195,16 +222,12 @@ class Game{
 			});
 			game._gists = game._gists.concat(mans);
 		}
-		else{
-			throw '[Game.constructor]: Wrong mans amount';
-		}
+		else throw '[Game.constructor]: Wrong mans amount';
 
 		if(typeof options.draw=='function'){
 			game._draw = options.draw;
 		}
-		else{
-			throw '[Game.constructor]: Wrong draw';
-		}
+		else throw '[Game.constructor]: Wrong draw';
 	}
 
 	tact(){
@@ -212,7 +235,7 @@ class Game{
 	}
 
 	gists(filter){
-		if(typeof filter===function){
+		if(typeof filter==='function'){
 			return this.g.filter(filter);		
 		}
 		else if(typeof filter==='string' || filter instanceof String){
