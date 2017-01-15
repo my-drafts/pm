@@ -9,13 +9,17 @@
 
 	// convas, image, coords, size
 	function __draw(canvas, image, t, s){
-		var trg = t && t.x && t.y ? [t.x, t.y].concat(t.w>0 && t.h>0 ? [t.w, t.h] : []) : [0, 0];
-		var src = trg.length==4 && s && s.x && s.y && s.w>0 && s.h>0 ? [s.x, s.y, s.w, sh] : [];
-		canvas.getContext('2d').drawImage.apply(canvas, [image].concat(trg, src));
+		var twh = t.w>0 && t.h>0 ? [t.w, t.h] : t.s>0 ? [t.s, t.s] : [];
+		var trg = (t && t.x>0 && t.y>0 ? [t.x, t.y] : [0, 0]).concat(twh);
+		var src =  s && s.x && s.y && s.w>0 && s.h>0 ? [s.x, s.y, s.w, s.h] : [];
+		var context = canvas.getContext('2d');
+		console.log(trg, src);
+		context.drawImage.apply(context, [image].concat(trg, src));
 	}
 
 	function __undraw(canvas, trg){
-		var t = Object.assign({ x: 0, y: 0, w: canvas.width, h: canvas.height }, trg);
+		var trgs = trg && trg.s>0 ? {w: trg.s, h: trg.s} : {};
+		var t = Object.assign({ x: 0, y: 0, w: canvas.width, h: canvas.height }, trgs, trg);
 		canvas.getContext('2d').clearRect(t.x, t.y, t.w, t.h);
 	}
 
