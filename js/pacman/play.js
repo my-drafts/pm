@@ -8,16 +8,16 @@
 	const TEXTURES = playTextures();
 
 	// convas, image, coords, size
-	function __draw(canvas, image, t, s){
+	function __draw(image, t, s, canvas){
+		canvas = canvas ? canvas : document.getElementById('easel');
 		var twh = t.w>0 && t.h>0 ? [t.w, t.h] : t.s>0 ? [t.s, t.s] : [];
-		var trg = (t && t.x>0 && t.y>0 ? [t.x, t.y] : [0, 0]).concat(twh);
-		var src =  s && s.x && s.y && s.w>0 && s.h>0 ? [s.x, s.y, s.w, s.h] : [];
+		var trg = (t && ('x' in t) && ('y' in t) ? [t.x*twh[0], t.y*twh[1]] : [0, 0]).concat(twh);
+		var src =  s && ('x' in s) && ('y' in s) && s.w>0 && s.h>0 ? [s.x, s.y, s.w, s.h] : [];
 		var context = canvas.getContext('2d');
-		console.log(trg, src);
 		context.drawImage.apply(context, [image].concat(trg, src));
 	}
 
-	function __undraw(canvas, trg){
+	function __undraw(trg, canvas){
 		var trgs = trg && trg.s>0 ? {w: trg.s, h: trg.s} : {};
 		var t = Object.assign({ x: 0, y: 0, w: canvas.width, h: canvas.height }, trgs, trg);
 		canvas.getContext('2d').clearRect(t.x, t.y, t.w, t.h);
@@ -152,12 +152,18 @@
 		},
 
 		foods: {
-			_default: { draw: foodDraw(), },
+			_default: {
+				draw: __draw,
+				undraw: __undraw,
+			},
 			f1: { texture: TEXTURES.food1, },
 		},
 
 		mans: {
-			_default: { draw: manDraw(), },
+			_default: {
+				draw: __draw,
+				undraw: __undraw,
+			},
 			amount: 1,
 			0: {
 				cell: 'm1',
@@ -186,7 +192,10 @@
 		},
 
 		walls: {
-			_default: { draw: wallDraw(), },
+			_default: {
+				draw: __draw,
+				undraw: __undraw,
+			},
 			wB: { texture: TEXTURES.w1b, },
 			wBL: { texture: TEXTURES.w1bl, },
 			wBLT: { texture: TEXTURES.w1blt, },
@@ -218,13 +227,13 @@
 		canvas.width = CELL_WIDTH * CELLS_WAMOUNT;
 		var context = canvas.getContext('2d');
 		var x = 0, y = 0;
-		__draw(canvas, TEXTURES.w1rb, { x: x, y: y });
-		__draw(canvas, TEXTURES.w1h, { x: x + 1, y: y });
-		__draw(canvas, TEXTURES.w1bl, { x: x + 2, y: y });
-		__draw(canvas, TEXTURES.w1v, { x: x + 0, y: y + 1 });
-		__draw(canvas, TEXTURES.w1v, { x: x + 2, y: y + 1 });
-		__draw(canvas, TEXTURES.w1tr, { x: x, y: y + 2 });
-		__draw(canvas, TEXTURES.w1h, { x: x + 1, y: y + 2 });
-		__draw(canvas, TEXTURES.w1lt, { x: x + 2, y: y + 2 });
+		__draw(TEXTURES.w1rb, { x: x, y: y, s: 16 }, {}, canvas);
+		__draw(TEXTURES.w1h, { x: x + 1, y: y, s: 16 }, {}, canvas);
+		__draw(TEXTURES.w1bl, { x: x + 2, y: y, s: 16 }, {}, canvas);
+		__draw(TEXTURES.w1v, { x: x + 0, y: y + 1, s: 16 }, {}, canvas);
+		__draw(TEXTURES.w1v, { x: x + 2, y: y + 1, s: 16 }, {}, canvas);
+		__draw(TEXTURES.w1tr, { x: x, y: y + 2, s: 16 }, {}, canvas);
+		__draw(TEXTURES.w1h, { x: x + 1, y: y + 2, s: 16 }, {}, canvas);
+		__draw(TEXTURES.w1lt, { x: x + 2, y: y + 2, s: 16 }, {}, canvas);
 	});
 })();
