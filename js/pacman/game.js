@@ -354,7 +354,7 @@ class Game{
 	tact(){
 		var game = this;
 		return new Promise(function(resolve, reject){
-			console.log(game.tactIndex);
+			//console.log(game.tactIndex);
 			
 			//
 			game.mans.filter(function(m){
@@ -363,13 +363,14 @@ class Game{
 				m.draw();
 			});
 
-			//*
+			//
 			game.bots.filter(function(b){
 				return b.acting || !b.painted;
-			}).forEach(function(m){
+			}).forEach(function(b){
 				b.draw();
 			});
-			/**/
+
+			//
 			resolve();
 		});
 	}

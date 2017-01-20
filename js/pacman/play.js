@@ -18,6 +18,56 @@
 		canvas.getContext('2d').clearRect(trg.x, trg.y, trg.w, trg.h);
 	}
 
+	function manDirection(d){
+		if(d=='u'){
+			return ['u0', 'u1', 'u2', 'u3', 'u4', 'u5', 'u6', ].map(function(s, i, a){
+				return {s:s, i:i, l:a.length};
+			});			
+		}
+		else if(d=='r'){
+			return ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', ].map(function(s, i, a){
+				return {s:s, i:i, l:a.length};
+			});			
+		}
+		else if(d=='d'){
+			return ['d0', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', ].map(function(s, i, a){
+				return {s:s, i:i, l:a.length};
+			});			
+		}
+		else if(d=='l'){
+			return ['l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', ].map(function(s, i, a){
+				return {s:s, i:i, l:a.length};
+			});			
+		}
+		else throw 'manDirection';
+	}
+
+	function botDirection(d){
+		if(d=='u'){
+			return ['u0', 'u1', 'u2', 'u3', 'u4', 'u5', 'u6', ].map(function(s, i, a){
+				return {s:s, i:i, l:a.length};
+			});			
+		}
+		else if(d=='r'){
+			return ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', ].map(function(s, i, a){
+				return {s:s, i:i, l:a.length};
+			});			
+		}
+		else if(d=='d'){
+			return ['d0', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', ].map(function(s, i, a){
+				return {s:s, i:i, l:a.length};
+			});			
+		}
+		else if(d=='l'){
+			return ['l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', ].map(function(s, i, a){
+				return {s:s, i:i, l:a.length};
+			});			
+		}
+		else{
+			return [];
+		}
+	}
+
 //ctx.clearRect(10, 10, 200, 200); // Очистка области указанного размера и положения
 //ctx.clearRect(0, 0, canvas.width, canvas.height); // Очиста всего холста 
 
@@ -146,34 +196,22 @@
 
 	document.bindKey('ArrowUp', function(){
 		//console.log('man[0] move up');
-		var man = game.mans[0];
-		var cell2 = game.field.cellUp(man.cell);
-		if(!cell2.gists('wall').length){
-			man.action = ['u0', 'u1', 'u2', 'u3', 'u4', 'u5', 'u6', ].map(function(s, i, a){
-				return {s:s, i:i, l:a.length};
-			});
-		}
+		game.mans[0].action = manDirection('u');
 	});
 
 	document.bindKey('ArrowDown', function(){
 		//console.log('man[0] move down');
-		game.mans[0].action = ['d0', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', ].map(function(s, i, a){
-			return {s:s, i:i, l:a.length};
-		});
+		game.mans[0].action = manDirection('d');
 	});
 
 	document.bindKey('ArrowLeft', function(){
 		//console.log('man[0] move left');
-		game.mans[0].action = ['l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', ].map(function(s, i, a){
-			return {s:s, i:i, l:a.length};
-		});
+		game.mans[0].action = manDirection('l');
 	});
 
 	document.bindKey('ArrowRight', function(){
 		//console.log('man[0] move right');
-		game.mans[0].action = ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', ].map(function(s, i, a){
-			return {s:s, i:i, l:a.length};
-		});
+		game.mans[0].action = manDirection('r');
 	});
 
 	var run = document.bindKey('Enter', function(){
@@ -184,4 +222,14 @@
 
 	game.run();
 
+	setInterval(function(){
+		game.bots.forEach(function(bot){
+			var r = Math.random();
+			var R = Math.floor(r*39/10);
+			var d = ['d', 'l', 'r', 'u'][R];
+			var D = botDirection(d);
+			bot.action = D;
+			console.log(R, d, D);
+		});
+	}, gameOptions.game.sleep * 4);
 })();
