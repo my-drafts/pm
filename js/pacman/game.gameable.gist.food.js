@@ -11,5 +11,14 @@ class Food extends Gist{
 		}
 	}
 
+	draw(){
+		var texture = this.texture;
+		var trg = this.game.cell2XY(this._cell);
+		super.draw(texture, trg);
+	}
+
+	undraw(){
+	}
+
 }
 

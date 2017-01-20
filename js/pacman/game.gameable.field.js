@@ -81,8 +81,48 @@ class Field extends Gameable{
 		else throw '[Field.cell]: Wrong cell index ';
 	}
 
-	cellXY(x, y){
+	cellxy(x, y){
 		return this.cell(y*this._width + x);
+	}
+
+	cellDown(cell){
+		if(cell instanceof Cell){
+			var xy = cell.xy;
+			return this.cellxy(xy.x, (xy.y + this.height + 1) % this.height);
+		}
+		else throw '[Field.cellDown]: Wrong cell';
+	}
+
+	cellLeft(cell){
+		if(cell instanceof Cell){
+			var xy = cell.xy;
+			return this.cellxy((xy.x + this.width - 1) % this.width, xy.y);
+		}
+		else throw '[Field.cellDown]: Wrong cell';
+	}
+
+	cellRight(cell){
+		if(cell instanceof Cell){
+			var xy = cell.xy;
+			return this.cellxy((xy.x + this.width + 1) % this.width, xy.y);
+		}
+		else throw '[Field.cellDown]: Wrong cell';
+	}
+
+	cellUp(cell){
+		if(cell instanceof Cell){
+			var xy = cell.xy;
+			return this.cellxy(xy.x, (xy.y + this.height - 1) % this.height);
+		}
+		else throw '[Field.cellDown]: Wrong cell';
+	}
+
+	draw(){
+		this._cells.filter(function(c){
+			return !c.paited;
+		}).forEach(function(c){
+			c.draw();
+		})
 	}
 
 	unbind(gist){

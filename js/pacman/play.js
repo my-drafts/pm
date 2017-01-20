@@ -1,29 +1,22 @@
 'use strict';
 
 (function(){
-	const CELL_SIZE = 16, CELLS_AMOUNT = 5;
-	const CELL_HEIGHT = CELL_SIZE, CELL_WIDTH = CELL_SIZE;
-	const CELLS_HAMOUNT = 3*CELLS_AMOUNT;
-	const CELLS_WAMOUNT = 4*CELLS_AMOUNT;
 	const TEXTURES = playTextures();
 
-	// convas, image, coords, size
-	function __draw(image, t, s, canvas){
-		canvas = canvas ? canvas : document.getElementById('easel');
-		var twh = t.w>0 && t.h>0 ? [t.w, t.h] : t.s>0 ? [t.s, t.s] : [];
-		var trg = (t && ('x' in t) && ('y' in t) ? [t.x*twh[0], t.y*twh[1]] : [0, 0]).concat(twh);
+	// context, image, coords, size
+	function __draw(canvas, image, t, s){
+		t = Object.assign({}, (t && t.s>0) ? {w: t.s, h: t.s} : {}, t);
+		var trg = (t.x && t.y ? [t.x, t.y] : [0, 0]).concat(t.w>0 && t.h>0 ? [t.w, t.h] : []);
 		var src =  s && ('x' in s) && ('y' in s) && s.w>0 && s.h>0 ? [s.x, s.y, s.w, s.h] : [];
 		var context = canvas.getContext('2d');
 		context.drawImage.apply(context, [image].concat(trg, src));
 	}
 
-	function __undraw(trg, canvas){
-		var trgs = trg && trg.s>0 ? {w: trg.s, h: trg.s} : {};
-		var t = Object.assign({ x: 0, y: 0, w: canvas.width, h: canvas.height }, trgs, trg);
-		canvas.getContext('2d').clearRect(t.x, t.y, t.w, t.h);
+	function __undraw(canvas, t){
+		var ts = t && t.s>0 ? {w: t.s, h: t.s} : {};
+		var trg = Object.assign({ x: 0, y: 0, w: canvas.width, h: canvas.height }, ts, t);
+		canvas.getContext('2d').clearRect(trg.x, trg.y, trg.w, trg.h);
 	}
-
-	var drawCellLT = { x: 0, y:0 }; // visible left top cell
 
 //ctx.clearRect(10, 10, 200, 200); // Очистка области указанного размера и положения
 //ctx.clearRect(0, 0, canvas.width, canvas.height); // Очиста всего холста 
@@ -47,70 +40,10 @@
 		__draw(canvas, img, x, y, w, h);
 	}
 */
-	function botDraw(){
-		var height = CELL_HEIGHT, width = CELL_WIDTH;
-		var draw = function(bot){
-			throw 'bot draw';
-		};
-		return draw;
-	}
-
-	function cellDraw(){
-		var height = CELL_HEIGHT, width = CELL_WIDTH;
-		var draw = function(cell){
-			throw 'cell draw';
-		};
-		return draw;
-	}
-
-	function fieldDraw(){
-		var height = CELL_HEIGHT, width = CELL_WIDTH;
-		var draw = function(field){
-			throw 'field draw';
-		};
-		return draw;
-	}
-
-	function foodDraw(){
-		var height = CELL_HEIGHT, width = CELL_WIDTH;
-		var draw = function(food){
-			throw 'food draw';
-		};
-		return draw;
-	}
-
-	function gameDraw(){
-		var height = CELL_HEIGHT, width = CELL_WIDTH;
-		var draw = function(game){
-			throw 'game draw';
-		};
-		return draw;
-	}
-
-	function manDraw(){
-		var height = CELL_HEIGHT, width = CELL_WIDTH;
-		var draw = function(man){
-			throw 'man draw';
-		};
-		return draw;
-	}
-
-	function wallDraw(){
-		var height = CELL_HEIGHT, width = CELL_WIDTH;
-		var draw = function(wall){
-			var x = wall.cell.xIndex;
-			var y = wall.cell.yIndex;
-			throw 'wall draw';
-		};
-		return draw;
-	}
 
 	var gameOptions = {
 		bots: {
-			_default: {
-				draw: __draw,
-				undraw: __undraw
-			},
+			_default: {},
 			amount: 4,
 			0: {
 				cell: 'b1',
@@ -130,40 +63,56 @@
 			},
 		},
 
-		cellHieght: CELL_HEIGHT,
-		cellWidth: CELL_WIDTH,
-		draw: __draw,
-		undraw: __undraw,
+		game: {
+			canvas: '#easel',
+			canvasCellHieght: 48,
+			canvasCellWidth: 48,
+			draw: __draw,
+			undraw: __undraw,
+
+			maps: '\
+			  wRB,  wH,  wH,  wH,  wH,  wH,  wH,  wH,  wH, wBL,\
+			   wV,  f1,   -,  f1,   -,   -,  f1,   -,  f1,  wV,\
+			   wV,   -,  wP,  wP,  f1,  f1, wRB, wBL,   -,  wV,\
+			   wV,   -,  wP,  wP,  f1,  f1, wTR, wLT,   -,  wV,\
+			   wV,  f1,  f1,  f1,   -,   -,  f1,  f1,  f1,  wV,\
+			   wV,   -,  wP,   -,  wP,  wP,  f1,  wP,   -,  wV,\
+			   wV,  f1,  wP,  m1,  wP,  b1,  b2,  wP,  f1,  wV,\
+			   wV,   -,  wP,   -,  wP,  wP,  f1,  wP,   -,  wV,\
+			   wV,  f1,   -,  f1,   -,   -,  f1,   -,  f1,  wV,\
+			  wTR,  wH,  wH,  wH,  wH,  wH,  wH,  wH,  wH, wLT \
+			',
+
+			sleep: 100,
+
+			visible: {
+				height: 3*20,
+				left: 0,
+				top: 0,
+				width: 4*20,
+			},
+
+		},
 
 		field: {
 			cells: {
 				_default: {
-					draw: __draw,
 					texture: TEXTURES.field,
-					undraw: __undraw,
 				},
 				'0:1': {},
 				0: {},
 			},
-			draw: __draw,
 			height: 10,
 			width: 10,
-			undraw: __undraw,
 		},
 
 		foods: {
-			_default: {
-				draw: __draw,
-				undraw: __undraw,
-			},
+			_default: {},
 			f1: { texture: TEXTURES.food1, },
 		},
 
 		mans: {
-			_default: {
-				draw: __draw,
-				undraw: __undraw,
-			},
+			_default: {},
 			amount: 1,
 			0: {
 				cell: 'm1',
@@ -171,31 +120,8 @@
 			},
 		},
 
-		maps: '\
-		  wRB,  wH,  wH,  wH,  wH,  wH,  wH,  wH,  wH, wBL,\
-		   wV,  f1,   -,  f1,   -,   -,  f1,   -,  f1,  wV,\
-		   wV,   -,  wP,  wP,  f1,  f1,  wP,  wP,   -,  wV,\
-		   wV,   -,  wP,  wP,  f1,  f1,  wP,  wP,   -,  wV,\
-		   wV,  f1,  f1,  f1,   -,   -,  f1,  f1,  f1,  wV,\
-		    -,   -,  wP,   -,  wP,  wP,  f1,  wP,   -,   -,\
-		   wV,  f1,  wP,  m1,  wP,  b1,  b2,  wP,  f1,  wV,\
-		   wV,   -,  wP,   -,  wP,  wP,  f1,  wP,   -,  wV,\
-		   wV,  f1,   -,  f1,   -,   -,  f1,   -,  f1,  wV,\
-		  wTR,  wH,  wH,  wH,  wH,  wH,  wH,  wH,  wH, wLT \
-		',
-
-		visible: {
-			height: 4,
-			left: 0,
-			top: 0,
-			width: 4,
-		},
-
 		walls: {
-			_default: {
-				draw: __draw,
-				undraw: __undraw,
-			},
+			_default: {},
 			wB: { texture: TEXTURES.w1b, },
 			wBL: { texture: TEXTURES.w1bl, },
 			wBLT: { texture: TEXTURES.w1blt, },
@@ -217,23 +143,45 @@
 	};
 
 	var game = new Game(gameOptions);
-	game.tact();
-//	console.log(game.height * )
 
-	// test
-	$("document").ready(function(){
-		var canvas = document.getElementById('easel');
-		canvas.height = CELL_HEIGHT * CELLS_HAMOUNT;
-		canvas.width = CELL_WIDTH * CELLS_WAMOUNT;
-		var context = canvas.getContext('2d');
-		var x = 0, y = 0;
-		__draw(TEXTURES.w1rb, { x: x, y: y, s: 16 }, {}, canvas);
-		__draw(TEXTURES.w1h, { x: x + 1, y: y, s: 16 }, {}, canvas);
-		__draw(TEXTURES.w1bl, { x: x + 2, y: y, s: 16 }, {}, canvas);
-		__draw(TEXTURES.w1v, { x: x + 0, y: y + 1, s: 16 }, {}, canvas);
-		__draw(TEXTURES.w1v, { x: x + 2, y: y + 1, s: 16 }, {}, canvas);
-		__draw(TEXTURES.w1tr, { x: x, y: y + 2, s: 16 }, {}, canvas);
-		__draw(TEXTURES.w1h, { x: x + 1, y: y + 2, s: 16 }, {}, canvas);
-		__draw(TEXTURES.w1lt, { x: x + 2, y: y + 2, s: 16 }, {}, canvas);
+	document.bindKey('ArrowUp', function(){
+		//console.log('man[0] move up');
+		var man = game.mans[0];
+		var cell2 = game.field.cellUp(man.cell);
+		if(!cell2.gists('wall').length){
+			man.action = ['u0', 'u1', 'u2', 'u3', 'u4', 'u5', 'u6', ].map(function(s, i, a){
+				return {s:s, i:i, l:a.length};
+			});
+		}
 	});
+
+	document.bindKey('ArrowDown', function(){
+		//console.log('man[0] move down');
+		game.mans[0].action = ['d0', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', ].map(function(s, i, a){
+			return {s:s, i:i, l:a.length};
+		});
+	});
+
+	document.bindKey('ArrowLeft', function(){
+		//console.log('man[0] move left');
+		game.mans[0].action = ['l0', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', ].map(function(s, i, a){
+			return {s:s, i:i, l:a.length};
+		});
+	});
+
+	document.bindKey('ArrowRight', function(){
+		//console.log('man[0] move right');
+		game.mans[0].action = ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', ].map(function(s, i, a){
+			return {s:s, i:i, l:a.length};
+		});
+	});
+
+	var run = document.bindKey('Enter', function(){
+		console.log('start game');
+		game.run();
+		document.unbindKey(run);
+	});
+
+	game.run();
+
 })();

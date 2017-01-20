@@ -11,6 +11,9 @@ class Gist extends Gameable{
 		return this._cell;
 	}
 
+	get texture(){
+		return this._texture;
+	}
 
 	constructor(is, game, options){
 		super(is, game, options);
@@ -31,10 +34,6 @@ class Gist extends Gameable{
 		else{
 			this._cell = cell;
 		}
-	}
-
-	draw(){
-		cosole.log('!1!');
 	}
 
 	unbind(){

@@ -16,6 +16,7 @@
 		}
 		else if(callback instanceof Object){
 			var cb = callback;
+			// key like regexp
 			var cbk = false;
 			if(cb.key instanceof RegExp){
 				cbk = cb.key;
@@ -23,6 +24,7 @@
 			else if(cb.k instanceof RegExp){
 				cbk = cb.k;
 			}
+			// key not like regexp
 			var cbnk = false;
 			if(cb.notkey instanceof RegExp){
 				cbnk = cb.notkey;
@@ -30,6 +32,7 @@
 			else if(cb.nk instanceof RegExp){
 				cbnk = cb.nk;
 			}
+			// value like regexp
 			var cbv = false;
 			if(cb.value instanceof RegExp){
 				cbv = cb.value;
@@ -37,6 +40,7 @@
 			else if(cb.v instanceof RegExp){
 				cbv = cb.v;
 			}
+			// value not like regexp
 			var cbnv = false;
 			if(cb.notvalue instanceof RegExp){
 				cbnv = cb.notvalue;
@@ -44,6 +48,7 @@
 			else if(cb.nv instanceof RegExp){
 				cbnv = cb.nv;
 			}
+			// filter
 			if(cbk || cbnk || cbv || cbnv){
 				return filter(obj, function(value, key){
 					var _cbk = cbk ? cbk.test(key) : true;
@@ -53,9 +58,7 @@
 					return _cbk && _cbnk && _cbv && _cbnv;
 				});			
 			}
-			else{
-				throw 'Error: Object.filter({key: RegExp?, value: RegExp?})';
-			}
+			else throw 'Error: Object.filter({key: RegExp?, notkey: ?, value: ?, notvalue: ?})';
 		}
 	}
 
@@ -67,9 +70,7 @@
 			});
 			return o.length>0 ? Object.assign.apply({}, o) : {};
 		}
-		else{
-			throw 'Error: Object.map(function)';
-		}
+		else throw 'Error: Object.map(function)';
 	}
 
 	Object.filter = function(obj, callback){

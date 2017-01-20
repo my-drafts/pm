@@ -11,7 +11,7 @@ class Game{
 	}
 
 	get g(){
-		return this.gists;
+		return this._gists;
 	}
 
 	get m(){
@@ -19,7 +19,7 @@ class Game{
 	}
 
 	get vb(){
-		return this.visibleBottom;
+		return this.visibleBottomIndex;
 	}
 
 	get vc(){
@@ -55,6 +55,18 @@ class Game{
 		return this.gists('bot'); 
 	}
 
+	get canvas(){
+		return this._canvas;
+	}
+
+	get cellHeight(){
+		return this._canvasCellHeight;
+	}
+
+	get cellWidth(){
+		return this._canvasCellWidth;
+	}
+
 	get field(){
 		return this._field;
 	}
@@ -73,6 +85,10 @@ class Game{
 
 	get tactIndex(){
 		return this._tactIndex;
+	}
+
+	get tactSleep(){
+		return this._tactSleep;
 	}
 
 	get visibleBottomIndex(){
@@ -117,40 +133,20 @@ class Game{
 	constructor(options){
 		var game = this;
 
-		game._tactIndex = 0;
-
-		if(options && options instanceof Object) ;
+		if(options && options.game && options.game instanceof Object) ;
 		else throw '[Game.constructor]: Wrong options';
 
 		// field
 		if(options.field){
 			game._field = new Field(game, options.field);
-			if(!options.visible){
-				game._visible = {
-					height: game.field.height,
-					left: 0,
-					top: 0,
-					width: game.field.width,
-				};
-			}
-			else if(options.visible.height>0 && options.visible.width>0){
-				game._visible = {
-					height: options.visible.height,
-					left: Math.max(options.visible.left, 0),
-					top: Math.max(options.visible.top, 0),
-					width: options.visible.width,
-				};
-				game._visible.left = Math.min(game.vleft, game.field.width - game.vwidth);
-				game._visible.top = Math.min(game.vtop, game.field.height - game.vheight);
-			}
-			else throw '[Game.constructor]: Wrong visible size';
 		}
 		else throw '[Game.constructor]: Wrong field cfg';
 
-		// gist
-		if(options.maps){
-			game._gists = [];
-			game._maps = new Map(options.maps);
+		game._gists = [];
+
+		// map
+		if(options.game.maps){
+			game._maps = new Map(options.game.maps);
 			if(game._maps.size==game._field.size);
 			else throw '[Game.constructor]: Wrong map size';
 		}
@@ -158,8 +154,10 @@ class Game{
 
 		// walls
 		if(options.walls){
-			var walls = options.walls.filter({ nk: /^_default$/ }).map(function(wallOptions, wallClass){
-				return game._maps.filter(function(cellClass, cellindex){
+			var walls = options.walls.filter({
+				nk: /^_default$/
+			}).map(function(wallOptions, wallClass){
+				return game._maps.filter(function(cellClass, cellIndex){
 					return cellClass==wallClass;
 				}).map(function(cellIndex){
 					var o = { cellIndex: cellIndex, wallClass: wallClass };
@@ -175,8 +173,10 @@ class Game{
 
 		// foods
 		if(options.foods){
-			var foods = options.foods.filter({ nk: /^_default$/ }).map(function(foodOptions, foodClass){
-				return game._maps.filter(function(cellClass, cellindex){
+			var foods = options.foods.filter({
+				nk: /^_default$/
+			}).map(function(foodOptions, foodClass){
+				return game._maps.filter(function(cellClass, cellIndex){
 					return cellClass==foodClass;
 				}).map(function(cellIndex){
 					var o = { cellIndex: cellIndex, foodClass: foodClass };
@@ -196,14 +196,14 @@ class Game{
 			var bots = [...Array(options.bots.amount).keys()].map(function(index){
 				var o = Object.assign({index: index}, options.bots._default, options.bots[index]);
 				var bot = new Bot(game, o);
-				game._maps.filter(function(cellClass, cellindex){
+				game._maps.filter(function(cellClass, cellIndex){
 					return cellClass==o.cell;
 				}).map(function(cellIndex){
 					game.field.bind(bot, cellIndex);
 				});
 				return bot;
 			});
-			game._gists = game._gists.concat(bots);
+			game._gists = [].concat.apply(game._gists, bots);
 		}
 		else throw '[Game.constructor]: Wrong bots amount';
 
@@ -213,56 +213,175 @@ class Game{
 			var mans = [...Array(options.mans.amount).keys()].map(function(index){
 				var o = Object.assign({index: index}, options.mans._default, options.mans[index]);
 				var man = new Man(game, o);
-				game._maps.filter(function(cellClass, cellindex){
+				game._maps.filter(function(cellClass, cellIndex){
 					return cellClass==o.cell;
 				}).map(function(cellIndex){
 					game.field.bind(man, cellIndex);
 				});
 				return man;
 			});
-			game._gists = game._gists.concat(mans);
+			game._gists = [].concat.apply(game._gists, mans);
 		}
 		else throw '[Game.constructor]: Wrong mans amount';
 
-		if(typeof options.draw=='function'){
-			game._draw = options.draw;
+		// canvas
+		if(options.game.canvas){
+			game._canvas = $(options.game.canvas);
+		}
+		else throw '[Game.constructor]: Wrong canvas';
+
+		// canvasCellSize
+		if(options.game.canvasCellSize>0){
+			game._canvasCellHeight = game._canvasCellWidth = options.game.canvasCellSize;
+		}
+		else if(options.game.canvasCellHieght>0 && options.game.canvasCellWidth>0){
+			game._canvasCellHeight = options.game.canvasCellHieght;
+			game._canvasCellWidth = options.game.canvasCellWidth;
+		}
+		else throw '[Game.constructor]: Wrong canvasCellSize';
+
+		// canvasDraw
+		if(typeof options.game.draw=='function'){
+			game._draw = options.game.draw;
 		}
 		else throw '[Game.constructor]: Wrong draw';
+
+		// canvasUnDraw
+		if(typeof options.game.undraw=='function'){
+			game._undraw = options.game.undraw;
+		}
+		else throw '[Game.constructor]: Wrong undraw';
+
+		// sleep
+		if(options.game.sleep>0){
+			game._tactSleep = options.game.sleep;
+		}
+		else{
+			game._tactSleep = 100;
+		}
+
+		// visible cells
+		if(!options.game.visible){
+			game._visible = {
+				height: game.field.height,
+				left: 0,
+				top: 0,
+				width: game.field.width,
+			};
+		}
+		else if(options.game.visible.height>0 && options.game.visible.width>0){
+			game._visible = {
+				height: Math.min(options.game.visible.height, game.field.height),
+				left: Math.max(options.game.visible.left, 0),
+				top: Math.max(options.game.visible.top, 0),
+				width: Math.min(options.game.visible.width, game.field.width),
+			};
+		}
+		else throw '[Game.constructor]: Wrong visible size';
+
+		var h = game._canvasCellHeight * game.vh + 1;
+		var w = game._canvasCellWidth * game.vw + 1;
+		game._canvas.attr('height', h + 'px');
+		game._canvas.attr('width', w + 'px');
+
+		game._tactIndex = 0;
+
+		this.field.draw();
+		this.walls.forEach(function(w, i){
+			w.draw();
+		});
+		this.foods.forEach(function(f, i){
+			f.draw();
+		});
+		this.bots.forEach(function(b){
+			b.draw();
+		});
+		this.mans.forEach(function(m){
+			m.draw();
+		});
 	}
 
-	tact(){
-		console.log(1);
+	cell2xy(cell){
+		var xy = cell.xy;
+		var v = { x: xy.x - this.vl, y: xy.y - this.vt };
+		if(0<=v.x && v.x<this.vw && 0<=v.y && v.y<this.vh){
+			return v;
+		}
+		else throw '[Error Game]: cell2xy';
+	}
+
+	cell2XY(cell){
+		var v = this.cell2xy(cell);
+		return { x: v.x*this._canvasCellWidth+1, y: v.y*this._canvasCellHeight+1 };
+	}
+
+	draw(image, trg, src){
+		if(this._draw){
+			var canvas = this._canvas.get(0);
+			if(!trg.w) trg.w = this._canvasCellWidth;
+			if(!trg.h) trg.h = this._canvasCellHeight;
+			return this._draw(canvas, image, trg, src);
+		}
 	}
 
 	gists(filter){
 		if(typeof filter==='function'){
-			return this.g.filter(filter);		
+			return this._gists.filter(filter);		
 		}
 		else if(typeof filter==='string' || filter instanceof String){
-			var is = String(is).toLowerCase();
-			return this.g.filter(function(g){
+			var is = String(filter).toLowerCase();
+			return this._gists.filter(function(g){
 				return g.is==is;
 			});
 		}
-		return this.g;
+		return this._gists;
 	}
 
-/*
-	get height(){
-		return this._field.height;
+	run(){
+		this._tactIndex = 0;
+		var game = this;
+		var it = function() {
+			game.tact().then(function(res){
+				game._tactIndex += 1;
+				setTimeout(it, game.tactSleep);				
+			}).catch(function(error){
+				console.log(error);
+			});
+		};
+		it();
 	}
 
-	get size(){
-		return this._field.size;
+	tact(){
+		var game = this;
+		return new Promise(function(resolve, reject){
+			console.log(game.tactIndex);
+			
+			//
+			game.mans.filter(function(m){
+				return m.acting || !m.painted;
+			}).forEach(function(m){
+				m.draw();
+			});
+
+			//*
+			game.bots.filter(function(b){
+				return b.acting || !b.painted;
+			}).forEach(function(m){
+				b.draw();
+			});
+			/**/
+			resolve();
+		});
 	}
 
-	get width(){
-		return this._field.width;
+	undraw(trg){
+		if(this._undraw){
+			var canvas = this._canvas.get(0);
+			if(!trg.w) trg.w = this._canvasCellWidth;
+			if(!trg.h) trg.h = this._canvasCellHeight;
+			return this._undraw(canvas, trg);
+		}
 	}
 
-	draw(){
-		this._draw && this._draw(this);
-	}
-*/
 }
 

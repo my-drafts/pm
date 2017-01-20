@@ -41,24 +41,44 @@ class Gameable{
 		else throw '[Gameable.constructor]: Wrong options in ' + this._is;
 
 		// draw
-		if(typeof options.draw=='function' || typeof options.undraw=='function'){
-			this._painted = false;
+		if(typeof options.draw=='function'){
 			this._draw = options.draw;
+		}
+
+		// undraw
+		if(typeof options.undraw=='function'){
 			this._undraw = options.undraw;
 		}
-		else throw '[Gameable.constructor]: Wrong (draw, undraw) in ' + this._is;
+
+		this._painted = false;
 	}
 
 
-	draw(){
-		console.log('!2!');
-		!this._painted && this._draw && this._draw(this);
-		this._painted = true;
+	draw(image, trg, src){
+		if(!!this._painted){
+			this._painted = true;
+		}
+		else if(this._draw){
+			this._draw(image, trg, src);
+			this._painted = true;
+		}
+		else if(this._game._draw){
+			this._game.draw(image, trg, src);
+			this._painted = true;
+		}
+		else throw '[Gameable.draw]: no draw method';
 	}
 
-	undraw(){
-		this._undraw && this._undraw(this);
-		//this._painted = false;
+	undraw(trg){
+		if(this._undraw){
+			this._undraw(trg);
+			//this._painted = false;
+		}
+		else if(this._game.undraw){
+			this._game.undraw(trg);
+			//this._painted = false;
+		}
+		else throw '[Gameable.undraw]: no undraw method';
 	}
 
 }
