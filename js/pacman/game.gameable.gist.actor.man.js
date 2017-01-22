@@ -47,6 +47,15 @@ class Man extends Actor{
 				cell2.draw();
 				if(a.i==a.l-1){
 					field.bind(man, cell2.index);
+					if(cell2.gists('food').length){
+						game.score += 1;
+						$('#score').html(game.score);
+					}
+				}
+				else if(cell2.gists('food').length){
+					cell2.gists('food').forEach(function(f){
+						f.eaten = true;
+					});
 				}
 			}
 			else{

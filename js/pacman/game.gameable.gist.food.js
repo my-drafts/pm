@@ -2,6 +2,14 @@
 
 class Food extends Gist{
 
+	get eaten(){
+		return this._eaten;
+	}
+	
+	set eaten(e){
+		this._eaten = !!e;
+	}
+
 	constructor(game, options) {
 		super('food', game, options);
 
@@ -9,6 +17,8 @@ class Food extends Gist{
 		if(options.foodClass){
 			this._class = options.foodClass;
 		}
+		
+		this._eaten = false;
 	}
 
 	draw(){

@@ -133,7 +133,7 @@
 			  wTR,  wH,  wH,  wH,  wH,  wH,  wH,  wH,  wH, wLT \
 			',
 
-			sleep: 100,
+			sleep: 50,
 
 			visible: {
 				height: 3*20,
@@ -213,13 +213,13 @@
 		//console.log('man[0] move right');
 		game.mans[0].action = manDirection('r');
 	});
-
+/*
 	var run = document.bindKey('Enter', function(){
 		console.log('start game');
 		game.run();
 		document.unbindKey(run);
 	});
-
+*/
 	game.run();
 
 	setInterval(function(){
@@ -229,7 +229,15 @@
 			var d = ['d', 'l', 'r', 'u'][R];
 			var D = botDirection(d);
 			bot.action = D;
-			console.log(R, d, D);
 		});
 	}, gameOptions.game.sleep * 4);
+
+		setInterval(function(){
+		game.foods.filter(function(f){
+			return f.eaten;
+		}).forEach(function(f){
+			f.eaten = Math.round(Math.random()*10)<5;
+		});
+	}, gameOptions.game.sleep * 10);
+
 })();

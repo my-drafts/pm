@@ -67,6 +67,14 @@ class Game{
 		return this._canvasCellWidth;
 	}
 
+	get done(){
+		return this._done;
+	}
+
+	set done(d){
+		this._done = !!d;
+	}
+	
 	get field(){
 		return this._field;
 	}
@@ -83,6 +91,14 @@ class Game{
 		return this.gists('man');
 	}
 
+	get score(){
+		return this._score;
+	}
+	
+	set score(s){
+		this._score = s;
+	}
+	
 	get tactIndex(){
 		return this._tactIndex;
 	}
@@ -285,6 +301,8 @@ class Game{
 		game._canvas.attr('width', w + 'px');
 
 		game._tactIndex = 0;
+		game._done = false;
+		game._score = 0;
 
 		this.field.draw();
 		this.walls.forEach(function(w, i){
@@ -371,7 +389,12 @@ class Game{
 			});
 
 			//
-			resolve();
+			if(!game.done){
+				resolve();
+			}
+			else{
+				alert("Game Over!\nScore: " + game.score);
+			}
 		});
 	}
 

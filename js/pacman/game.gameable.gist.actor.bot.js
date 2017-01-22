@@ -16,6 +16,13 @@ class Bot extends Actor{
 		var a = bot.action;
 		var texture = undefined;
 		cell.draw();
+		if(cell && cell.gists('food').length){
+			cell.gists('food').forEach(function(f){
+				f.painted = f.eaten;
+				f.draw();
+			});
+		}
+		//
 		if(a===false) texture = this.texture.P;
 		else if(/^(u)([\d])/.test(a.s)){
 			texture = bot.texture.T[a.i];
@@ -42,12 +49,20 @@ class Bot extends Actor{
 			trg.x -= Math.floor(game.cellWidth * (a.i+1) / a.l);
 		}
 		else throw '[Bot.draw]';
-		console.log(1);
 		if(cell2){
 			if(!cell2.gists('wall').length){
 				cell2.draw();
 				if(a.i==a.l-1){
 					field.bind(bot, cell2.index);
+					if(cell2.gists('man').length){
+						game.done = true;
+					}
+				}
+				else if(cell2 && cell2.gists('food').length){
+					cell2.gists('food').forEach(function(f){
+						f.painted = f.eaten;
+						f.draw();
+					});
 				}
 			}
 			else{
